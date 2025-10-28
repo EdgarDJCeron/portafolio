@@ -14,8 +14,27 @@ const __dirname = dirname(__filename);
 
 const app = express();
 
-// Middlewares generales
-app.use(cors());
+// Configuración de CORS para producción
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:3000",
+  process.env.FRONTEND_URL || "https://tu-dominio.vercel.app"
+];
+
+app.use(cors({
+  origin: function(origin, callback) {
+    // Permitir requests sin origin (como mobile apps o curl)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1 || origin.endsWith('.vercel.app')) {
+      callback(null, true);
+    } else {
+      callback(new Error('No permitido por CORS'));
+    }
+  },
+  credentials: true
+}));
+
 app.use(express.json());
 app.use(morgan("dev"));
 
