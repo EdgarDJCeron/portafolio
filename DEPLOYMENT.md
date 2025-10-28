@@ -177,6 +177,13 @@ En Render Dashboard → tu servicio → "Manual Deploy" → "Deploy latest commi
 - Verifica que `VITE_API_URL` esté configurado en Vercel
 - Asegúrate de haber hecho redeploy después de agregar la variable
 
+### Las imágenes estáticas no se ven en Vercel
+- Verifica que las imágenes estén en `frontend/public/`
+- Asegúrate de que las imágenes estén en Git: `git ls-files frontend/public/`
+- Si las imágenes no están en Git, agrégalas: `git add frontend/public/img/* && git commit -m "Agregar imágenes" && git push`
+- En Vercel, ve a tu proyecto → **Deployments** → Click en los tres puntos → **Redeploy**
+- Las rutas deben ser absolutas desde public: `/img/foto.jpg` no `public/img/foto.jpg`
+
 ### El backend se duerme (Render Free Tier)
 - Render duerme los servicios gratuitos después de 15 minutos de inactividad
 - La primera petición después de dormir puede tardar 30-60 segundos

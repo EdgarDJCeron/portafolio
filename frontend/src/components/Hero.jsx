@@ -61,7 +61,7 @@ export default function Hero() {
           </a>
 
           <a
-            href="public/CV_EdgarCeron.pdf" download
+            href="/CV_EdgarCeron.pdf" download
             className="inline-flex items-center justify-center h-12 px-6 rounded-lg bg-[#2F3438] text-white/95 font-bold hover:bg-[#3a3f44] transition-colors"
           >
             Descargar CV
