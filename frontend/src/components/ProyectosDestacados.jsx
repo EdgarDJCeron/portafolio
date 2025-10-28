@@ -77,11 +77,15 @@ export default function ProyectosDestacados() {
 
 /* ---------- Tarjeta de Proyecto (exacta al mockup) ---------- */
 function ProjectCard({ proyecto }) {
-  // Si la imagen empieza con /uploads, agregar la URL del backend
+  // La imagen puede venir de Cloudinary (URL completa) o del backend (/uploads)
   let img = proyecto.imagenDestacada || PLACEHOLDER;
+  
+  // Si la imagen empieza con /uploads, agregar la URL del backend (legacy)
   if (img && img.startsWith('/uploads')) {
     img = `${API_URL}${img}`;
   }
+  // Si ya es una URL completa de Cloudinary, usarla tal cual
+  // (las URLs de Cloudinary empiezan con https://res.cloudinary.com/)
   
   const pills = (proyecto.etiquetas || []).slice(0, 4); // muestra hasta 4 como en el mockup
 

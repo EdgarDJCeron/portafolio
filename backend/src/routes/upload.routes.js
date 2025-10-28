@@ -1,34 +1,12 @@
 import { Router } from 'express';
 import multer from 'multer';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-import fs from 'fs';
 import { requiereAuth, requiereAdmin } from '../middlewares/auth.js';
+import { storage } from '../config/cloudinary.js';
+import cloudinary from '../config/cloudinary.js';
 
 const router = Router();
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-// Configurar carpeta de uploads
-const uploadsDir = path.join(__dirname, '../../uploads');
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
-}
-
-// Configurar multer
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, uploadsDir);
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    const ext = path.extname(file.originalname);
-    cb(null, 'proyecto-' + uniqueSuffix + ext);
-  }
-});
-
+// Configurar multer con Cloudinary
 const fileFilter = (req, file, cb) => {
   // Aceptar solo imágenes
   if (file.mimetype.startsWith('image/')) {
@@ -53,27 +31,27 @@ router.post('/', requiereAuth, requiereAdmin, upload.single('imagen'), (req, res
       return res.status(400).json({ error: 'No se proporcionó ningún archivo' });
     }
 
-    // Retornar la URL de la imagen
-    const url = `/uploads/${req.file.filename}`;
-    res.json({ url, filename: req.file.filename });
+    // Cloudinary devuelve la URL en req.file.path
+    const url = req.file.path;
+    const filename = req.file.filename;
+    
+    res.json({ url, filename });
   } catch (error) {
     console.error('Error al subir imagen:', error);
     res.status(500).json({ error: 'Error al subir la imagen' });
   }
 });
 
-// Endpoint para eliminar imagen (opcional)
-router.delete('/:filename', requiereAuth, requiereAdmin, (req, res) => {
+// Endpoint para eliminar imagen
+router.delete('/:filename', requiereAuth, requiereAdmin, async (req, res) => {
   try {
     const { filename } = req.params;
-    const filePath = path.join(uploadsDir, filename);
-
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
-      res.json({ mensaje: 'Imagen eliminada correctamente' });
-    } else {
-      res.status(404).json({ error: 'Imagen no encontrada' });
-    }
+    
+    // El filename en Cloudinary incluye la carpeta: portafolio/filename
+    const publicId = filename.includes('/') ? filename : `portafolio/${filename}`;
+    
+    await cloudinary.uploader.destroy(publicId);
+    res.json({ mensaje: 'Imagen eliminada correctamente' });
   } catch (error) {
     console.error('Error al eliminar imagen:', error);
     res.status(500).json({ error: 'Error al eliminar la imagen' });
