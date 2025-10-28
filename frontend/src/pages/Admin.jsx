@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { apiFetch } from "../services/api";
 import { useAuth } from "../context/AuthContext";
+import { API_URL } from "../config";
 import toast from "react-hot-toast";
 
 
@@ -140,7 +141,7 @@ export default function Admin() {
         const formData = new FormData();
         formData.append('imagen', imagenProyecto.archivo);
 
-        const respuesta = await fetch('http://localhost:4000/api/upload', {
+        const respuesta = await fetch(`${API_URL}/api/upload`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -205,7 +206,7 @@ export default function Admin() {
         const formData = new FormData();
         formData.append('imagen', imagenProyecto.archivo);
 
-        const respuesta = await fetch('http://localhost:4000/api/upload', {
+        const respuesta = await fetch(`${API_URL}/api/upload`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${token}`,
