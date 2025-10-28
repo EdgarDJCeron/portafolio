@@ -7,7 +7,7 @@ export function requiereAuth(req, res, next) {
     if (!token) {
       return res.status(401).json({ mensaje: "No autorizado: falta token" });
     }
-    const payload = jwt.verify(token, process.env.JWT_SECRETO);
+    const payload = jwt.verify(token, process.env.JWT_SECRET);
     req.usuario = payload; // { id, email, rol }
     next();
   } catch (err) {
