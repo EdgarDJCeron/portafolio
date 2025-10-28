@@ -70,7 +70,7 @@ export default function SobreMi() {
               {/* Botones */}
               <div className="mt-8 flex flex-col sm:flex-row gap-4">
                 <a
-                  href="public/CV_EdgarCeron.pdf"
+                  href="/CV_EdgarCeron.pdf"
                   download
                   className="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-lg bg-[#1173d4] px-6 py-3 text-white font-bold shadow-lg shadow-[#1173d4]/30 transition-transform duration-200 hover:scale-105 active:scale-100"
                 >
